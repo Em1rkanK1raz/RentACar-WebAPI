@@ -2,55 +2,502 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rent A Car Yönetim Paneli</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="bg-light">
 
-    <div class="container mt-5">
-        <h1 class="mb-4">🚗 Rent A Car Yönetim Paneli</h1>
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center">🚗 Rent A Car Yönetim Paneli</h1>
 
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Araç Listesi</h5>
+        <!-- SEKMELER -->
+        <ul class="nav nav-tabs mb-4" id="mainTab">
+            <li class="nav-item">
+                <a class="nav-link active fw-bold" data-bs-toggle="tab" href="#cars">🚗 Araç Yönetimi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fw-bold" data-bs-toggle="tab" href="#customers">👥 Müşteri Yönetimi</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+
+            <!-- ==================== 1. ARAÇ YÖNETİMİ ==================== -->
+            <div class="tab-pane fade show active" id="cars">
+
+                <!-- Yeni Araç Ekle Kartı -->
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">➕ Yeni Araç Ekle</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="addCarForm" class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Marka</label>
+                                <input type="text" id="brand" class="form-control" placeholder="Örn: Renault" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Model</label>
+                                <input type="text" id="model" class="form-control" placeholder="Örn: Clio" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Plaka</label>
+                                <input type="text" id="plate" class="form-control"
+                                       placeholder="Örn: 34 ABC 123"
+                                       pattern="^\d{2}\s[A-Z]{1,3}\s\d{2,4}$"
+                                       title="Plaka formatı: 34 ABC 123 şeklinde olmalıdır!"
+                                       required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Günlük Ücret (₺)</label>
+                                <input type="number" id="dailyPrice" class="form-control" min="1" max="100000" placeholder="Örn: 1500" required>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-success px-4">Kaydet</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Araç Listesi Tablosu -->
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">📋 Araç Listesi</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Marka</th>
+                                    <th>Model</th>
+                                    <th>Plaka</th>
+                                    <th>Günlük Ücret</th>
+                                    <th>Durum</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="carTable"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Marka</th>
-                            <th>Model</th>
-                            <th>Plaka</th>
-                            <th>Günlük Ücret</th>
-                            <th>Durum</th>
-                        </tr>
-                    </thead>
-                    <tbody id="carTable">
-                    </tbody>
-                </table>
+
+            <!-- ==================== 2. MÜŞTERİ YÖNETİMİ ==================== -->
+            <div class="tab-pane fade" id="customers">
+
+                <!-- Yeni Müşteri Ekle Kartı -->
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">➕ Yeni Müşteri Ekle</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="addCustomerForm" class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Ad</label>
+                                <input type="text" id="firstName" class="form-control" placeholder="Örn: Ahmet" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Soyad</label>
+                                <input type="text" id="lastName" class="form-control" placeholder="Örn: Yılmaz" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Telefon</label>
+                                <input type="text" id="phoneNumber" class="form-control"
+                                       placeholder="Örn: 0532 000 00 00"
+                                       pattern="^05\d{2}\s\d{3}\s\d{2}\s\d{2}$"
+                                       title="Telefon formatı: 05XX XXX XX XX şeklinde olmalıdır!"
+                                       required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">E-Posta</label>
+                                <input type="email" id="email" class="form-control" placeholder="Örn: ahmet@mail.com" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">TC Kimlik No</label>
+                                <input type="text" id="nationalId" class="form-control"
+                                       placeholder="11 haneli TC No"
+                                       maxlength="11"
+                                       pattern="^\d{11}$"
+                                       title="TC Kimlik No 11 haneli ve sadece rakam olmalıdır!"
+                                       required>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-success px-4">Kaydet</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Müşteri Listesi Tablosu -->
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">📋 Müşteri Listesi</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Ad</th>
+                                    <th>Soyad</th>
+                                    <th>Telefon</th>
+                                    <th>E-Posta</th>
+                                    <th>TC No</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customerTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ==================== 3. MODALLAR (DÜZENLEME PENCERELERİ) ==================== -->
+    <!-- Araç Düzenleme Modalı -->
+    <div class="modal fade" id="editCarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">✏️ Aracı Düzenle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editCarId">
+                    <div class="mb-2">
+                        <label class="form-label">Marka</label>
+                        <input type="text" id="editBrand" class="form-control" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Model</label>
+                        <input type="text" id="editModel" class="form-control" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Plaka</label>
+                        <input type="text" id="editPlate" class="form-control"
+                               placeholder="Örn: 34 ABC 123" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Günlük Ücret (₺)</label>
+                        <input type="number" id="editDailyPrice" class="form-control" min="1" max="100000" required>
+                    </div>
+                    <div class="mb-2 form-check">
+                        <input type="checkbox" id="editIsRented" class="form-check-input">
+                        <label class="form-check-label" for="editIsRented">Kirada mı?</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button class="btn btn-primary" onclick="saveCarUpdate()">Kaydet</button>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Müşteri Düzenleme Modalı -->
+    <div class="modal fade" id="editCustomerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">✏️ Müşteriyi Düzenle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editCustomerId">
+                    <div class="mb-2">
+                        <label class="form-label">Ad</label>
+                        <input type="text" id="editFirstName" class="form-control" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Soyad</label>
+                        <input type="text" id="editLastName" class="form-control" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Telefon</label>
+                        <input type="text" id="editPhoneNumber" class="form-control"
+                               placeholder="Örn: 0532 000 00 00" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">E-Posta</label>
+                        <input type="email" id="editEmailCustomer" class="form-control" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">TC Kimlik No</label>
+                        <input type="text" id="editNationalId" class="form-control" maxlength="11" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button class="btn btn-primary" onclick="saveCustomerUpdate()">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 4. JAVASCRIPT ==================== -->
     <script>
-    fetch('/api/Cars')
-        .then(response => response.json())
-        .then(cars => {
-            const table = document.getElementById('carTable');
-            cars.forEach(car => {
-                table.innerHTML += `
-                    <tr>
-                        <td>${car.id}</td>
-                        <td>${car.brand}</td>
-                        <td>${car.model}</td>
-                        <td>${car.plate}</td>
-                        <td>${car.dailyPrice} ₺</td>
-                        <td>${car.isRented ? '🔴 Kirada' : '🟢 Müsait'}</td>
-                    </tr>`;
+        let editCarModal, editCustomerModal;
+        let allCars = [], allCustomers = [];
+
+        // Regex Format Kontrolcüleri
+        const plateRegex = /^\d{2}\s[A-Z]{1,3}\s\d{2,4}$/;
+        const phoneRegex = /^05\d{2}\s\d{3}\s\d{2}\s\d{2}$/;
+        const tcRegex = /^\d{11}$/;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            editCarModal = new bootstrap.Modal(document.getElementById('editCarModal'));
+            editCustomerModal = new bootstrap.Modal(document.getElementById('editCustomerModal'));
+            loadCars();
+            loadCustomers();
+        });
+
+        // ------------------ ARAÇ İŞLEMLERİ ------------------
+        function loadCars() {
+            fetch('/api/Cars')
+                .then(r => r.json())
+                .then(cars => {
+                    allCars = cars;
+                    const t = document.getElementById('carTable');
+                    t.innerHTML = '';
+                    if (cars.length === 0) {
+                        t.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Kayıtlı araç bulunmuyor.</td></tr>';
+                        return;
+                    }
+                    cars.forEach(car => {
+                        t.innerHTML += `<tr>
+                                <td>${car.id}</td>
+                                <td><strong>${car.brand}</strong></td>
+                                <td>${car.model}</td>
+                                <td><span class="badge bg-secondary">${car.plate}</span></td>
+                                <td>${car.dailyPrice} ₺</td>
+                                <td>${car.isRented ? '<span class="badge bg-danger">🔴 Kirada</span>' : '<span class="badge bg-success">🟢 Müsait</span>'}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm me-1" onclick="openEditCar(${car.id})">✏️</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteCar(${car.id})">🗑️</button>
+                                </td>
+                            </tr>`;
+                    });
+                });
+        }
+
+        document.getElementById('addCarForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const plateVal = document.getElementById('plate').value.trim();
+
+            if (!plateRegex.test(plateVal)) {
+                alert('Plaka formatı hatalı! Örnek: 34 ABC 123');
+                return;
+            }
+
+            fetch('/api/Cars', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    brand: document.getElementById('brand').value.trim(),
+                    model: document.getElementById('model').value.trim(),
+                    plate: plateVal,
+                    dailyPrice: parseFloat(document.getElementById('dailyPrice').value),
+                    isRented: false
+                })
+            }).then(async r => {
+                if (r.ok) {
+                    this.reset();
+                    loadCars();
+                } else {
+                    const err = await r.json().catch(() => null);
+                    alert('Hata: ' + (err?.title || 'Araç eklenemedi! Lütfen alanları kontrol ediniz.'));
+                }
             });
         });
-    </script>
 
+        function openEditCar(id) {
+            const car = allCars.find(c => c.id === id);
+            if (!car) return;
+            document.getElementById('editCarId').value = car.id;
+            document.getElementById('editBrand').value = car.brand;
+            document.getElementById('editModel').value = car.model;
+            document.getElementById('editPlate').value = car.plate;
+            document.getElementById('editDailyPrice').value = car.dailyPrice;
+            document.getElementById('editIsRented').checked = car.isRented;
+            editCarModal.show();
+        }
+
+        function saveCarUpdate() {
+            const id = document.getElementById('editCarId').value;
+            const brand = document.getElementById('editBrand').value.trim();
+            const model = document.getElementById('editModel').value.trim();
+            const plate = document.getElementById('editPlate').value.trim();
+            const price = parseFloat(document.getElementById('editDailyPrice').value);
+
+            if (!brand || !model || !plate || isNaN(price) || price <= 0) {
+                alert('Lütfen tüm alanları eksiksiz ve geçerli doldurunuz!');
+                return;
+            }
+
+            if (!plateRegex.test(plate)) {
+                alert('Plaka formatı hatalı! Format: 34 ABC 123 şeklinde olmalıdır.');
+                return;
+            }
+
+            fetch(`/api/Cars/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    brand: brand,
+                    model: model,
+                    plate: plate,
+                    dailyPrice: price,
+                    isRented: document.getElementById('editIsRented').checked
+                })
+            }).then(r => {
+                if (r.ok) {
+                    editCarModal.hide();
+                    loadCars();
+                } else {
+                    alert('Güncelleme başarısız! Bilgileri kontrol ediniz.');
+                }
+            });
+        }
+
+        function deleteCar(id) {
+            if (confirm('Bu aracı silmek istediğinize emin misiniz?')) {
+                fetch(`/api/Cars/${id}`, { method: 'DELETE' }).then(r => {
+                    if (r.ok) loadCars();
+                    else alert('Araç silinemedi!');
+                });
+            }
+        }
+
+        // ------------------ MÜŞTERİ İŞLEMLERİ ------------------
+        function loadCustomers() {
+            fetch('/api/Customers')
+                .then(r => r.json())
+                .then(customers => {
+                    allCustomers = customers;
+                    const t = document.getElementById('customerTable');
+                    t.innerHTML = '';
+                    if (customers.length === 0) {
+                        t.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Kayıtlı müşteri bulunmuyor.</td></tr>';
+                        return;
+                    }
+                    customers.forEach(c => {
+                        t.innerHTML += `<tr>
+                                <td>${c.id}</td>
+                                <td>${c.firstName}</td>
+                                <td>${c.lastName}</td>
+                                <td>${c.phoneNumber}</td>
+                                <td>${c.email}</td>
+                                <td><span class="badge bg-secondary">${c.nationalId}</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm me-1" onclick="openEditCustomer(${c.id})">✏️</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteCustomer(${c.id})">🗑️</button>
+                                </td>
+                            </tr>`;
+                    });
+                });
+        }
+
+        document.getElementById('addCustomerForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const phone = document.getElementById('phoneNumber').value.trim();
+            const tc = document.getElementById('nationalId').value.trim();
+
+            if (!phoneRegex.test(phone)) {
+                alert('Telefon formatı hatalı! Örnek: 0532 000 00 00');
+                return;
+            }
+            if (!tcRegex.test(tc)) {
+                alert('TC Kimlik No 11 haneli rakamlardan oluşmalıdır!');
+                return;
+            }
+
+            fetch('/api/Customers', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    firstName: document.getElementById('firstName').value.trim(),
+                    lastName: document.getElementById('lastName').value.trim(),
+                    phoneNumber: phone,
+                    email: document.getElementById('email').value.trim(),
+                    nationalId: tc
+                })
+            }).then(async r => {
+                if (r.ok) {
+                    this.reset();
+                    loadCustomers();
+                } else {
+                    const err = await r.json().catch(() => null);
+                    alert('Hata: ' + (err?.title || 'Müşteri eklenemedi! Bilgileri kontrol ediniz.'));
+                }
+            });
+        });
+
+        function openEditCustomer(id) {
+            const c = allCustomers.find(x => x.id === id);
+            if (!c) return;
+            document.getElementById('editCustomerId').value = c.id;
+            document.getElementById('editFirstName').value = c.firstName;
+            document.getElementById('editLastName').value = c.lastName;
+            document.getElementById('editPhoneNumber').value = c.phoneNumber;
+            document.getElementById('editEmailCustomer').value = c.email;
+            document.getElementById('editNationalId').value = c.nationalId;
+            editCustomerModal.show();
+        }
+
+        function saveCustomerUpdate() {
+            const id = document.getElementById('editCustomerId').value;
+            const firstName = document.getElementById('editFirstName').value.trim();
+            const lastName = document.getElementById('editLastName').value.trim();
+            const phone = document.getElementById('editPhoneNumber').value.trim();
+            const email = document.getElementById('editEmailCustomer').value.trim();
+            const tc = document.getElementById('editNationalId').value.trim();
+
+            if (!firstName || !lastName || !phone || !email || !tc) {
+                alert('Lütfen tüm alanları doldurunuz!');
+                return;
+            }
+            if (!phoneRegex.test(phone)) {
+                alert('Telefon formatı hatalı! Örnek: 0532 000 00 00');
+                return;
+            }
+            if (!tcRegex.test(tc)) {
+                alert('TC Kimlik No 11 haneli ve sadece rakam olmalıdır!');
+                return;
+            }
+
+            fetch(`/api/Customers/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                    phoneNumber: phone,
+                    email: email,
+                    nationalId: tc
+                })
+            }).then(r => {
+                if (r.ok) {
+                    editCustomerModal.hide();
+                    loadCustomers();
+                } else {
+                    alert('Güncelleme başarısız! Bilgileri kontrol ediniz.');
+                }
+            });
+        }
+
+        function deleteCustomer(id) {
+            if (confirm('Bu müşteriyi silmek istediğinize emin misiniz?')) {
+                fetch(`/api/Customers/${id}`, { method: 'DELETE' }).then(r => {
+                    if (r.ok) loadCustomers();
+                    else alert('Müşteri silinemedi!');
+                });
+            }
+        }
+    </script>
 </body>
 </html>
