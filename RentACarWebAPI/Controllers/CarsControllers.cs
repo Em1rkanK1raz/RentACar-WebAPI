@@ -22,26 +22,35 @@ namespace RentACarWebAPI.Controllers
 
         }
         [HttpPost]
-        public IActionResult AddCar(Car car)
+        public IActionResult AddCar(CarCreateDto dto)
         {
+            var car = new Car
+            {
+                Brand = dto.Brand,
+                Model = dto.Model,
+                Plate = dto.Plate,
+                DailyPrice = dto.DailyPrice,
+                IsRented = dto.IsRented
+            };
+
             _context.Cars.Add(car);
             _context.SaveChanges();
             return Ok(car);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCar(int id, Car updatedCar)
+        public IActionResult UpdateCar(int id, CarCreateDto dto)
         {
             var car = _context.Cars.Find(id);
             if (car == null)
             {
                 return NotFound();
             }
-            car.Brand = updatedCar.Brand;
-            car.Model = updatedCar.Model;
-            car.Plate = updatedCar.Plate;
-            car.DailyPrice = updatedCar.DailyPrice;
-            car.IsRented = updatedCar.IsRented;
+            car.Brand = dto.Brand;  
+            car.Model = dto.Model;
+            car.Plate = dto.Plate;
+            car.DailyPrice = dto.DailyPrice;
+            car.IsRented = dto.IsRented;
             _context.SaveChanges();
             return Ok(car);
         }
