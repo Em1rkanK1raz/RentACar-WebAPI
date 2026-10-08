@@ -32,7 +32,7 @@ Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları i
 
 Projeyi Klonlayın:
 
-git clone https://github.com/KULLANICI_ADIN/RentACarWebAPI.git
+git clone https://github.com/Em1rkanK1raz/RentACarWebAPI.git
 
 
 Gerekli SDK'yı İndirin:
